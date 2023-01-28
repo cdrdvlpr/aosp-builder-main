@@ -1,31 +1,27 @@
 version: 2.1
+
 jobs:
-  build:
-    working_directory: "/tmp/ci"
-    environment:
-      CIRRUS_CLONE_DEPTH: 1
-      CIRRUS_WORKING_DIR: "/tmp/ci"
-      rclone_config: "ENCRYPTED[f98850b20879fcbd16836a3cbedefdeb57289777d7eaa36ccafc270e9d3667b79187135d950b596f39d9f7504df84c49]"
+  aosp:
     docker:
       - image: jk8s/cirrus-ci-aosp:latest
     steps:
-      - name: "download ccache in background"
-        run: |
-          ./download_ccache
-      - name: "Sync source"
-        run: |
-          ./sync
-      - name: "monitor ccache and machine status"
-        run: |
-          ./monitor &
-      - name: "Actual build"
-        run: |
-          ./build
-      - name: "Upload ccache to cloud"
-        run: |
-          ./upload_ccache
-    resources:
-      limits:
-        cpus: '8'
-        memory: 32G
-    timeout: 120m
+      - run:
+          name: Download ccache in background
+          command: ./download_ccache
+      - run:
+          name: Syncing source
+          command: ./sync
+      - run:
+          name: Monitor script
+          command: ./monitor
+          background: true
+      - run:
+          name: Build script
+          command: ./build
+      - run:
+          name: Upload ccache script
+          command: ./upload_ccache
+    environment:
+      CIRRUS_CLONE_DEPTH: "1"
+      CIRRUS_WORKING_DIR: "/tmp/ci"
+      rclone_config: "ENCRYPTED[f98850b20879fcbd16836a3cbedefdeb57289777d7eaa36ccafc270e9d3667b79187135d950b596f39d9f7504df84c49]"
