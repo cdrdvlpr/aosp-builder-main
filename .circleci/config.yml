@@ -10,8 +10,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Download ccache
-          command:  #!/bin/bash
-                  df -h
+          command: df -h
                   free -h
                   nproc
                   cat /etc/os*
