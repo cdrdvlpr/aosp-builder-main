@@ -9,8 +9,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Download ccache
-          command: ./../download_ccache
+          name: Download ccache download_ccache
       - run:
           name: Sync source
           command: ./../sync
