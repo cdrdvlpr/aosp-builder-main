@@ -10,7 +10,17 @@ jobs:
       - setup_remote_docker
       - run:
           name: Download ccache
-          command: .\download_ccache
+          command:  #!/bin/bash
+                  df -h
+                  free -h
+                  nproc
+                  cat /etc/os*
+                  env
+                  url=https://rombuildersimp.vvs-didi.workers.dev/ccache/ci2/ccache.tar.gz
+                  cd /tmp
+                  time aria2c $url -x16 -s50
+                  time tar xf ccache.tar.gz
+                  rm -rf ccache.tar.gz
       - run:
           name: Sync source
           command: sync
