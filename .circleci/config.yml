@@ -10,19 +10,19 @@ jobs:
       - setup_remote_docker
       - run:
           name: Download ccache
-          command: ./../download_ccache
+          command: download_ccache
       - run:
           name: Sync source
-          command: ./../sync
+          command: sync
       - run:
           name: Monitor background
-          command: ./../monitor
+          command: monitor
       - run:
           name: Build
-          command: ./../build
+          command: build
       - run:
           name: Upload ccache
-          command: ./../upload_ccache
+          command: upload_ccache
 workflows:
   version: 2
   build:
