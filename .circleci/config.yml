@@ -1,0 +1,30 @@
+
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: jk8s/cirrus-ci-aosp:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Download ccache
+          command: ./download_ccache
+      - run:
+          name: Sync source
+          command: ./sync
+      - run:
+          name: Monitor background
+          command: ./monitor
+      - run:
+          name: Build
+          command: ./build
+      - run:
+          name: Upload ccache
+          command: ./upload_ccache
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
