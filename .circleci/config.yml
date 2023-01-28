@@ -4,6 +4,10 @@ jobs:
   build:
     docker:
       - image: apon77/aosp:latest
+    environment:
+      CIRRUS_CLONE_DEPTH: 1
+      CIRRUS_WORKING_DIR: "/tmp/ci"
+      RCLONE_CONFIG: "ENCRYPTED[f98850b20879fcbd16836a3cbedefdeb57289777d7eaa36ccafc270e9d3667b79187135d950b596f39d9f7504df84c49]"
     steps:
       - checkout
       - setup_remote_docker
