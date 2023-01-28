@@ -1,33 +1,18 @@
 version: 2.1
-
 jobs:
-  build:
-    docker:
-      - image: apon77/aosp:latest
-    environment:
-      CIRRUS_CLONE_DEPTH: 1
-      CIRRUS_WORKING_DIR: "/tmp/ci"
-      RCLONE_CONFIG: "ENCRYPTED[f98850b20879fcbd16836a3cbedefdeb57289777d7eaa36ccafc270e9d3667b79187135d950b596f39d9f7504df84c49]"
-    steps:
-      - checkout
-      - setup_remote_docker
+  compile:
+   docker:
+      - image: z3zens/ubuntu:latest
+   steps:
       - run:
-          name: Download ccache
-          command: ./download_ccache
-      - run:
-          name: Sync source
-          command: ./sync
-      - run:
-          name: Monitor background
-          command: ./monitor
-      - run:
-          name: Build
-          command: ./build
-      - run:
-          name: Upload ccache
-          command: ./upload_ccache
+          command: |
+           git config --global user.email "xyzxmocha@gmail.com"
+           git config --global user.name "xyz-mocha"
+           git config --global color.ui false
+           git clone --depth=1 https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -b ${CIRCLE_BRANCH} .
+           bash .circleci/build.sh
 workflows:
-  version: 2
-  build:
+  version: 2.1
+  cooking:
     jobs:
-      - build
+      - compile
