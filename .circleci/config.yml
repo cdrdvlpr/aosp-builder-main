@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: jk8s/cirrus-ci-aosp:latest
+      - image: apon77/aosp:latest
     steps:
       - checkout
       - setup_remote_docker
