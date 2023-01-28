@@ -1,39 +1,31 @@
-
 version: 2.1
-
 jobs:
   build:
+    working_directory: "/tmp/ci"
+    environment:
+      CIRRUS_CLONE_DEPTH: 1
+      CIRRUS_WORKING_DIR: "/tmp/ci"
+      rclone_config: "ENCRYPTED[f98850b20879fcbd16836a3cbedefdeb57289777d7eaa36ccafc270e9d3667b79187135d950b596f39d9f7504df84c49]"
     docker:
-      - image: apon77/aosp:latest
+      - image: jk8s/cirrus-ci-aosp:latest
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Download ccache
-          command: df -h
-                  free -h
-                  nproc
-                  cat /etc/os*
-                  env
-                  url=https://rombuildersimp.vvs-didi.workers.dev/ccache/ci2/ccache.tar.gz
-                  cd /tmp
-                  time aria2c $url -x16 -s50
-                  time tar xf ccache.tar.gz
-                  rm -rf ccache.tar.gz
-      - run:
-          name: Sync source
-          command: sync
-      - run:
-          name: Monitor background
-          command: monitor
-      - run:
-          name: Build
-          command: build
-      - run:
-          name: Upload ccache
-          command: upload_ccache
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
+      - name: "download ccache in background"
+        run: |
+          ./download_ccache
+      - name: "Sync source"
+        run: |
+          ./sync
+      - name: "monitor ccache and machine status"
+        run: |
+          ./monitor &
+      - name: "Actual build"
+        run: |
+          ./build
+      - name: "Upload ccache to cloud"
+        run: |
+          ./upload_ccache
+    resources:
+      limits:
+        cpus: '8'
+        memory: 32G
+    timeout: 120m
